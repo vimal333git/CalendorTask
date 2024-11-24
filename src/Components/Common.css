@@ -1,0 +1,262 @@
+.container{
+    padding: 10px;
+    padding-top: 2vh;
+}
+
+.header_container{
+    height: 5vh;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.calender_interval_container{
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
+    background-color: #f9f9fc;
+}
+
+.calender_container{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.divider{
+    display: flex;
+    /* flex-wrap: nowrap; */
+    /* flex-direction: column; */
+}
+
+.arrow_con{
+    float: left;
+    margin-left: 2vw;
+}
+
+/* .point_cursor:hover{
+    color: lightgray;
+} */
+
+.point_cursor{
+    cursor: pointer;
+}
+
+.duration_con{
+    float: right;
+}
+
+.hour_cell{
+    margin-top: 0px;
+    width: 3vw;
+    color: blue;
+    height: 10vh;
+    font-size: 11px;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.duration_container{
+    font-size: 13px;
+}
+
+.selected_duration{
+    text-decoration: underline;
+    text-decoration-color: blue;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 3px;
+}
+
+.date_part{
+    display: flex;
+    flex-wrap: nowrap;
+    position: sticky;
+    top:0
+}
+
+.cell_part{
+    display: flex;
+    flex-direction: column;
+}
+
+.date_cell{
+    z-index: 1000;
+    background-color: #f4f4f7;
+    padding: 5px;
+    width: 13vw;
+    height: 10vh;
+    box-sizing:border-box ;
+    border: 1px #dfe7e7 solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+}
+
+.data_cell_row{
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.data_cell{
+    /* padding: 5px; */
+    width: 13vw;
+    height: 10vh;
+    box-sizing:border-box ;
+    border: 1px #dfe7e7 solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* .data_cell:hover {
+    background-color: rgb(236, 232, 232);
+} */
+
+.hour_list{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10vh;
+}
+
+.cell_list{
+    width: 100%;
+}
+
+.subscibed{
+    display: flex;
+    width: 100%;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 4px 4px 10px #ebe2e2;
+    z-index: 1;
+}
+
+.subscibed:hover{
+    background-color: rgb(246, 248, 250);
+}
+
+.subscibed-part1{
+    width: 10%;
+    background-color: rgb(96 96 175);
+}
+
+.subscibed-part1_muti_event{
+    width: 8.15%;
+    background-color: rgb(96 96 175);
+}
+
+.subscibed-part2{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 10px;
+    padding: 4px;
+}
+
+.count{
+    font-size: 12px;
+    position: relative;
+    left: 11.5vw;
+    color: black;
+    background-color: #FFEB3B;
+    border-radius: 50%;
+    display: flex;
+    width: 1.5vw;
+    height: 3vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.multiple_events_container{
+    position: fixed;
+    top: 15vh;
+    left: 15vw;
+}
+
+.cover_background{
+    background-color: #d2d5db;
+    opacity: 0.1;
+}
+
+.date_cell_opactiy_mode{
+    z-index: 1000;
+    background-color: #f4f4f7;
+    padding: 5px;
+    width: 13vw;
+    height: 10vh;
+    box-sizing: border-box;
+    border: 1px #dfe7e7 solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+}
+
+.date_cell_opactiy_mode_fixed{
+    z-index: 1000;
+    /* background-color: #f4f4f7; */
+    padding: 5px;
+    width: 13vw;
+    height: 10vh;
+    box-sizing: border-box;
+    border: 1px #dfe7e7 solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+}
+
+.fixed-container{
+    box-shadow: 2px 2px 10px #a7a4b9;
+    display: flex;
+    margin-top: 15px;
+    height: 12vh;
+}
+
+.subscibed-part1-fixed{
+    width: 10%;
+    background-color: rgb(96 96 175);
+    border-radius: 3px;
+}
+
+.subscibed-part2-fixed{
+    background-color: #e7e7ed;
+    width: 12vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 10px;
+    padding: 4px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.subscibed-part2-fixed-first{
+    background-color: rgb(96 96 175);
+    color: white;
+    width: 12vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 10px;
+    padding: 4px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.hide_close{
+    display: none;
+}
+
+.close_icon_position{
+    position: fixed;
+    left: 90vw;
+    top: 5vh;
+    cursor: pointer;
+}
