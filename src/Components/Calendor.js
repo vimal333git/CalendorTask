@@ -25,7 +25,7 @@ const App = () => {
 
     const [dataList, setDataList] = useState([]);
     const [dateList, setDateList] = useState([]);
-    const [activeWeek, setActiveWeek] = useState(-13);
+    const [activeWeek, setActiveWeek] = useState(0);
     const [events, setEvents] = useState();
     const [mappedData, setMappedData] = useState([]);
     const [fixedMode, setFixedMode] = useState(false);
@@ -44,7 +44,7 @@ const App = () => {
                 behavior: "smooth",
                 block: "center"
             });
-        }, 1000);
+        }, 2000);
 
     }, [])
 
