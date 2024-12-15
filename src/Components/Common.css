@@ -140,12 +140,12 @@
 
 .subscibed-part1{
     width: 10%;
-    background-color: rgb(96 96 175);
+    background-color: rgb(57 124 193);
 }
 
 .subscibed-part1_muti_event{
     width: 8.15%;
-    background-color: rgb(96 96 175);
+    background-color: rgb(57 124 193);
 }
 
 .subscibed-part2{
@@ -221,8 +221,8 @@
 
 .subscibed-part1-fixed{
     width: 10%;
-    background-color: rgb(96 96 175);
-    border-radius: 3px;
+    background-color: rgb(57 124 193);
+    /* border-radius: 3px; */
 }
 
 .subscibed-part2-fixed{
@@ -238,7 +238,7 @@
 }
 
 .subscibed-part2-fixed-first{
-    background-color: rgb(96 96 175);
+    background-color: rgb(57 124 193);
     color: white;
     width: 12vw;
     display: flex;
@@ -256,7 +256,14 @@
 
 .close_icon_position{
     position: fixed;
-    left: 90vw;
-    top: 5vh;
+    left: 68%;
+    top: 18vh;
+    cursor: pointer;
+    /* z-index: 1; */
+}
+
+.close-icon-new{
+    display: flex;
+    justify-content: end;
     cursor: pointer;
 }

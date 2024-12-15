@@ -36,37 +36,48 @@ const Modal = ({ isOpen, onClose, eventDetails }) => {
     var eventEndTime = moment(eventDetails['end']).format("hh:mm A");
     var interviewTime = `${eventStartTime} to ${eventEndTime}`;
     var interviewVia = 'Google Meet';
+    var link = eventDetails?.['link'] || '';
+
+    const openLink = () => {
+        window.open(link)
+    }
 
     return (
         <div className="modal">
-            <div className='close_icon_position' >
+            {/* <div className='close_icon_position' >
                 <img onClick={onClose} src={Close} width={25} height={25} />
-            </div>
+            </div> */}
             <div className="modal-content">
-                <div className='dialog-container'>
-                    <div className='event_dialog_left'>
-                        <span className='panel-text'>Interview With: {interviewWith}</span>
-                        <span className='panel-text'>Position: {position}</span>
-                        <span className='panel-text'>Created By: {createBy}</span>
-                        <span className='panel-text'>Interview Date: {interviewDate}</span>
-                        <span className='panel-text'>Interview Time: {interviewTime}</span>
-                        <span className='panel-text'>Interview Via: {interviewVia}</span>
-                        <span className='download-btn'>
-                            Resume.docx
-                        </span>
-                        <span className='download-btn'>
-                            AadharCard
-                        </span>
-                    </div>
-                    <div className='event_dialog_right'>
-                        <div style={{ 'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'center' }}>
-                            <img src={GoogleLogo} width={100} height={100} />
-                            <div className='button_join'>
-                                Join
+                <div className='close-icon-new'>
+                    <img onClick={onClose} src={Close} width={25} height={25} />
+                </div>
+                <div className='container'>
+                    <div className='dialog-container'>
+                        <div className='event_dialog_left'>
+                            <span className='panel-text'>Interview With: {interviewWith}</span>
+                            <span className='panel-text'>Position: {position}</span>
+                            <span className='panel-text'>Created By: {createBy}</span>
+                            <span className='panel-text'>Interview Date: {interviewDate}</span>
+                            <span className='panel-text'>Interview Time: {interviewTime}</span>
+                            <span className='panel-text'>Interview Via: {interviewVia}</span>
+                            <span className='download-btn'>
+                                Resume.docx
+                            </span>
+                            <span className='download-btn'>
+                                AadharCard
+                            </span>
+                        </div>
+                        <div className='event_dialog_right'>
+                            <div style={{ 'display': 'flex', 'flexDirection': 'column', 'justifyContent': 'center' }}>
+                                <img src={GoogleLogo} width={100} height={100} />
+                                <div className='button_join' onClick={openLink}>
+                                    Join
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     );

@@ -29,7 +29,7 @@ const calculatedMarginBottom = (min, IntervalFromTop) => {
     }
 }
 
-const RenderEachRow = (props) => {
+const RenderEachCellWeek = (props) => {
     var html = [];
     props.item.data.forEach((cell, index) => {
         var active = (cell['events']).length > 0 ? true : false;
@@ -72,4 +72,4 @@ const RenderEachRow = (props) => {
     return html;
 }
 
-export default RenderEachRow;
+export default RenderEachCellWeek;

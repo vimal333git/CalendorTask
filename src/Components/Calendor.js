@@ -1,12 +1,18 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { getWeekDetails, converDateToHoursTimeStamp, converDateTimeToMinInUnix } from './Common';
+import {
+    getWeekDetails, getMonthDetails, converDateToHoursTimeStamp, createRowWiseDays, converDateTimeToMinInUnix,
+    getYearDetails, createRowWiseYear, getDayDetails, createRowWiseHours
+} from './Common';
 import moment from 'moment'
 import './Common.css';
 import EventDetails from './eventDateTimeDetails/calendarfromtoenddate.json';
 import Left from './icons/left.png';
 import Right from './icons/right.png';
 import Close from './icons/close.png';
-import Events from './Events';
+import EventsDay from './EventsDay';
+import EventsWeek from './EventsWeek';
+import EventsMonth from './EventsMonth';
+import EventsYear from './EventsYear';
 
 const Dialog = React.lazy(() => import('./Dialog/Dialog'));
 
@@ -18,47 +24,140 @@ const App = () => {
         "1 PM", "2 PM", "3 PM", "4 PM", "5 PM", "6 PM", "7 PM", "8 PM", "9 PM", "10 PM", "11 PM"
     ];
 
-    const monthList = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
+    const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    const series = [
+        { frame: 'Day', active: true },
+        { frame: 'Week', active: false },
+        { frame: 'Month', active: false },
+        { frame: 'Year', active: false }
     ]
 
-    const [dataList, setDataList] = useState([]);
     const [dateList, setDateList] = useState([]);
-    const [activeWeek, setActiveWeek] = useState(0);
+    const [activeSeriesTime, setactiveSeriesTime] = useState(0);
     const [events, setEvents] = useState();
     const [mappedData, setMappedData] = useState([]);
     const [fixedMode, setFixedMode] = useState(false);
     const [fixedModeList, setFixedModeList] = useState(EventDetails);
     const [selectedEventDetails, setSelectedEventDetails] = useState({});
     const [isOpen, setIsOpen] = useState(false);
+    const [activerTimeFrame, setactiverTimeFrame] = useState('Day');
+    const [timeSeries, setTimeSeries] = useState(series);
+    const [dateIndicator, setDateIndicator] = useState('');
 
     useEffect(() => {
-        handleWeek(activeWeek);
+        handleSeriesOfRecord(activeSeriesTime, activerTimeFrame);
         setEvents(EventDetails);
 
-        setTimeout(() => {
-            var id = `${moment().format('h')}_${moment().format('A')}`
-            const targetElement = document.getElementById(id);
-            targetElement.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
-        }, 2000);
+        // console.log(getMonthDetails(-2))
+
+        // setTimeout(() => {
+        //     var id = `${moment().format('h')}_${moment().format('A')}`
+        //     const targetElement = document.getElementById(id);
+        //     targetElement.scrollIntoView({
+        //         behavior: "smooth",
+        //         block: "center"
+        //     });
+        // }, 2000);
 
     }, [])
 
-    const handleWeek = (weekCount) => {
-        var date = getWeekDetails(weekCount);
-        var hourseWiseDetails = converDateToHoursTimeStamp(date);
-        handleMapping(hourseWiseDetails, EventDetails);
-        setDataList(hourseWiseDetails)
-        setDateList(date)
+    const handleSeriesOfRecord = (activeSeriesTime, activerTimeFrame) => {
+        if (activerTimeFrame === 'Day') {
+            var date = getDayDetails(activeSeriesTime);
+            var text = moment(date[0]).format('DD MMMM YYYY');
+            setDateIndicator(text)
+            var createRowWiseRecord = createRowWiseHours(date);
+            handleMappingDay(createRowWiseRecord, EventDetails);
+        } else if (activerTimeFrame === 'Week') {
+            var date = getWeekDetails(activeSeriesTime);
+            var text = moment(date[0]).format('MMMM YYYY');
+            setDateIndicator(text)
+            var createRowWiseRecord = converDateToHoursTimeStamp(date);
+            handleMappingWeek(createRowWiseRecord, EventDetails);
+            setDateList(date)
+        } else if (activerTimeFrame === 'Month') {
+            var date = getMonthDetails(activeSeriesTime);
+            var text = moment(date[0]).format('MMMM YYYY');
+            setDateIndicator(text)
+            var createRowWiseRecord = createRowWiseDays(date);
+            handleMappingMonth(createRowWiseRecord, EventDetails);
+            setDateList(weekDays)
+        } else if (activerTimeFrame === 'Year') {
+            var date = getYearDetails(activeSeriesTime);
+            var text = moment(date?.[0]?.['start']).format('YYYY')
+            setDateIndicator(text)
+            var createRowWiseRecord = createRowWiseYear(date);
+            handleMappingYear(createRowWiseRecord, EventDetails)
+        }
     }
 
-    const handleMapping = (hourseWiseDetails, EventDetails) => {
+    const timeFrameChange = (item) => {
+        setactiverTimeFrame(item.frame)
+        setactiveSeriesTime(0);
+        handleSeriesOfRecord(0, item.frame)
+        setTimeSeries(timeSeries.map((ele) => {
+            if (ele['frame'] === item['frame']) {
+                ele['active'] = true;
+            } else {
+                ele['active'] = false;
+            }
+            return ele;
+        }))
+    }
+
+    const handleMappingDay = (hourseWiseDetails, EventDetails) => {
+        var eachHr = [];
+        (hourseWiseDetails).forEach((ele) => {
+            var mappedEvent = EventDetails.filter((iValue) => {
+                var startTimeStamp = converDateTimeToMinInUnix(iValue['start']);
+                return (ele['startTime'] <= startTimeStamp) && (ele['endTime'] > startTimeStamp);
+            })
+            ele['events'] = mappedEvent;
+            eachHr.push(ele);
+        })
+        setMappedData(eachHr)
+    }
+
+    const handleMappingWeek = (hourseWiseDetails, EventDetails) => {
         var updatedList = [];
         hourseWiseDetails.forEach((item) => {
+            var eachHr = [];
+            (item.data).forEach((ele) => {
+                var mappedEvent = EventDetails.filter((iValue) => {
+                    var startTimeStamp = converDateTimeToMinInUnix(iValue['start']);
+                    return (ele['startTime'] <= startTimeStamp) && (ele['endTime'] > startTimeStamp);
+                })
+                ele['events'] = mappedEvent;
+                eachHr.push(ele);
+            })
+            item['data'] = eachHr;
+            updatedList.push(item);
+        })
+        setMappedData(updatedList)
+    }
+
+    const handleMappingYear = (hourseWiseDetails, EventDetails) => {
+        var updatedList = [];
+        hourseWiseDetails.forEach((item) => {
+            var eachHr = [];
+            (item.data).forEach((ele) => {
+                var mappedEvent = EventDetails.filter((iValue) => {
+                    var startTimeStamp = converDateTimeToMinInUnix(iValue['start']);
+                    return (ele['startTime'] <= startTimeStamp) && (ele['endTime'] > startTimeStamp);
+                })
+                ele['events'] = mappedEvent;
+                eachHr.push(ele);
+            })
+            item['data'] = eachHr;
+            updatedList.push(item);
+        })
+        setMappedData(updatedList)
+    }
+
+    const handleMappingMonth = (createRowWiseRecord, EventDetails) => {
+        var updatedList = [];
+        createRowWiseRecord.forEach((item) => {
             var eachHr = [];
             (item.data).forEach((ele) => {
                 var mappedEvent = EventDetails.filter((iValue) => {
@@ -86,12 +185,21 @@ const App = () => {
     const renderDateRow = () => {
         var html = [];
         dateList.forEach((item) => {
-            html.push(
-                <span className={`${fixedMode ? 'date_cell_opactiy_mode_fixed' : 'date_cell_opactiy_mode'} `}>
-                    <span>{moment(item).format('DD MMM')}</span>
-                    <span>{moment(item).format('dddd')}</span>
-                </span>
-            )
+            if (activerTimeFrame === 'Week') {
+                html.push(
+                    <span className={`${fixedMode ? 'date_cell_opactiy_mode_fixed' : 'date_cell_opactiy_mode'} `}>
+                        <span>{moment(item).format('DD MMM')}</span>
+                        <span>{moment(item).format('dddd')}</span>
+                    </span>
+                )
+            } else if (activerTimeFrame === 'Month') {
+                html.push(
+                    <span className='date_cell_opactiy_mode_fixed'>{item}</span>
+                )
+            } else {
+                return '';
+            }
+
         })
         return html;
     }
@@ -116,7 +224,13 @@ const App = () => {
         var html = [];
         mappedData.forEach((item, i) => {
             var eachRow = <Suspense fallback={<span>Loading...</span>} >
-                <Events item={item} selectCell={selectCell} />
+                {
+                    activerTimeFrame === 'Day' ? <EventsDay item={item} selectCell={selectCell} /> :
+                        activerTimeFrame === 'Week' ? <EventsWeek item={item} activerTimeFrame={activerTimeFrame} selectCell={selectCell} /> :
+                            activerTimeFrame === 'Month' ? <EventsMonth item={item} activerTimeFrame={activerTimeFrame} selectCell={selectCell} /> :
+                                activerTimeFrame === 'Year' ? <EventsYear item={item} activerTimeFrame={activerTimeFrame} selectCell={selectCell} /> : ''
+
+                }
             </Suspense>
             html.push(
                 <span className='data_cell_row'>{eachRow}</span>
@@ -126,13 +240,13 @@ const App = () => {
     }
 
     const nextWeekHandle = () => {
-        handleWeek(activeWeek + 1)
-        setActiveWeek(activeWeek + 1)
+        handleSeriesOfRecord(activeSeriesTime + 1, activerTimeFrame)
+        setactiveSeriesTime(activeSeriesTime + 1)
     }
 
     const beforWeekHandle = () => {
-        handleWeek(activeWeek - 1)
-        setActiveWeek(activeWeek - 1)
+        handleSeriesOfRecord(activeSeriesTime - 1, activerTimeFrame)
+        setactiveSeriesTime(activeSeriesTime - 1)
     }
 
     const renderMultipleEvent = () => {
@@ -144,14 +258,14 @@ const App = () => {
         var eventEndTime = moment(firstCell['end']).format("hh:mm A");
         var Time = `${eventStartTime} to ${eventEndTime}`;
 
-        html.push(
-            <div className='fixed-container' >
-                <div className='subscibed-part2-fixed-first'>
-                    <span>position:{position}</span>
-                    <span>Time: {Time}</span>
-                </div>
-            </div>
-        )
+        // html.push(
+        //     <div className='fixed-container' >
+        //         <div className='subscibed-part2-fixed-first'>
+        //             <span>position:{position}</span>
+        //             <span>Time: {Time}</span>
+        //         </div>
+        //     </div>
+        // )
 
         fixedModeList.forEach((item) => {
             var firstCell = item;
@@ -167,6 +281,7 @@ const App = () => {
                     <div className='subscibed-part2-fixed'>
                         <span>position:{position}</span>
                         <span>Interviewer: {InterviewerName}</span>
+                        <span>Date: {moment(item.start).format('DD MMM YYYY')}</span>
                         <span>Time: {Time}</span>
                     </div>
                 </div>
@@ -197,8 +312,9 @@ const App = () => {
                 <div>Todo's</div>
                 <div></div>
             </div> */}
+            {/* {dateIndicator} */}
             <div className={`calender_interval_container ${fixedMode && 'cover_background'} `}  >
-                <div className='duration'>
+                <div className='duration' style={{ 'display': 'flex', 'justifyContent': 'space-between' }}>
                     <div className='arrow_con'>
                         <span className='point_cursor' >
                             <img onClick={beforWeekHandle} src={Left} width={25} height={25} />
@@ -207,18 +323,20 @@ const App = () => {
                             <img onClick={nextWeekHandle} src={Right} width={25} height={25} />
                         </span>
                     </div>
+                    <div>
+                        {dateIndicator}
+                    </div>
                     <div className='duration_con'>
                         <div className='duration_container'>
-                            <span className='point_cursor' style={{ 'marginLeft': '10px', 'opacity': '0.3' }}>Today</span>
-                            <span className='selected_duration point_cursor' style={{ 'marginLeft': '10px' }}>Week</span>
-                            <span className='point_cursor' style={{ 'marginLeft': '10px', 'opacity': '0.3' }}>Month</span>
-                            <span className='point_cursor' style={{ 'marginLeft': '10px', 'opacity': '0.3' }}>Year</span>
+                            {
+                                timeSeries.map((item) => <span onClick={() => timeFrameChange(item)} className={`point_cursor ${item.active ? 'selected_duration' : ''}`} style={{ 'marginLeft': '10px', 'opacity': item.active ? '1' : '0.3' }}>{item.frame}</span>)
+                            }
                         </div>
                     </div>
                 </div>
                 <div className='calender_container'>
                     <div className='divider'>
-                        <div className='hour_list'>
+                        <div className='hour_list' style={{ 'visibility': `${activerTimeFrame === 'Day' || activerTimeFrame === 'Week' ? 'visible' : 'hidden'}`, 'marginTop': `${activerTimeFrame === 'Day' ? '0vh' : '10vh'}` }}>
                             {renderHours()}
                         </div>
                         <div className='cell_list'>
