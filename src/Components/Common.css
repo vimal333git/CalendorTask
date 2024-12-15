@@ -175,6 +175,8 @@
     position: fixed;
     top: 15vh;
     left: 15vw;
+    height: 85vh;
+    overflow-y: auto;
 }
 
 .cover_background{
@@ -267,3 +269,24 @@
     justify-content: end;
     cursor: pointer;
 }
+
+::-webkit-scrollbar {
+    width: 12px;  
+    height: 12px; 
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1; 
+    border-radius: 10px; 
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888; 
+    border-radius: 10px; 
+    border: 3px solid #f1f1f1; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555; 
+}
+
