@@ -27,9 +27,9 @@ const App = () => {
     const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     const series = [
-        { frame: 'Day', active: true },
+        { frame: 'Day', active: false },
         { frame: 'Week', active: false },
-        { frame: 'Month', active: false },
+        { frame: 'Month', active: true },
         { frame: 'Year', active: false }
     ]
 
@@ -41,7 +41,7 @@ const App = () => {
     const [fixedModeList, setFixedModeList] = useState(EventDetails);
     const [selectedEventDetails, setSelectedEventDetails] = useState({});
     const [isOpen, setIsOpen] = useState(false);
-    const [activerTimeFrame, setactiverTimeFrame] = useState('Day');
+    const [activerTimeFrame, setactiverTimeFrame] = useState('Month');
     const [timeSeries, setTimeSeries] = useState(series);
     const [dateIndicator, setDateIndicator] = useState('');
 
